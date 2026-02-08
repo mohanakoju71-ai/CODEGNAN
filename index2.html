@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+        /* =========================================
+           1. GLOBAL STYLES (Desktop Default)
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #fff;
+            overflow-x: hidden; /* CRITICAL: Prevents white space on right side */
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* =========================================
+           2. NAVBAR
+           ========================================= */
+        .navbar {
+            height: 90px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .navbar-container {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-box img { height: 50px; cursor: pointer; }
+
+        .menu { display: flex; list-style: none; gap: 30px; }
+        .menu li { font-weight: 500; font-size: 16px; color: #333; cursor: pointer; position: relative; display: flex; align-items: center; height: 90px; gap: 5px; }
+        .menu li:hover { color: #e31e24; }
+        .arrow { font-size: 10px; color: #777; transition: 0.3s; }
+        .menu li:hover .arrow { transform: rotate(180deg); }
+
+        /* Dropdowns (Desktop) */
+        .dropdown { position: absolute; top: 100%; left: 0; width: 220px; background: #fff; list-style: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 3px solid #e31e24; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1001; }
+        .has-dropdown:hover .dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown li { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; height: auto; color: #444; }
+        .dropdown li:hover { background: #fff5f5; color: #e31e24; padding-left: 25px; }
+        .submenu { position: absolute; top: 0; left: 100%; width: 200px; background: #fff; list-style: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 3px solid #e31e24; opacity: 0; visibility: hidden; transform: translateX(10px); transition: all 0.3s ease; }
+        .has-submenu:hover .submenu { opacity: 1; visibility: visible; transform: translateX(0); }
+        .side-arrow { font-size: 10px; }
+
+        /* =========================================
+           3. HERO SECTION
+           ========================================= */
+        .hero-section {
+            background-color: #1f2a7c;
+            color: #fff;
+            padding-top: 80px;
+            padding-bottom: 150px; 
+            margin-bottom: 80px; 
+            position: relative;
+        }
+        .relative-container { position: relative; height: 100%; }
+        .hero-wrapper { display: flex; justify-content: space-between; align-items: center; gap: 50px; }
+        .hero-left { width: 48%; }
+        .script-title { font-family: 'Kaushan Script', cursive; font-size: 55px; margin-bottom: 0; line-height: 1.1; }
+        .script-subtitle { font-family: 'Kaushan Script', cursive; font-size: 55px; color: #1abc9c; margin-bottom: 25px; line-height: 1.1; }
+        .hero-desc { font-size: 16px; line-height: 1.6; color: #e0e0e0; margin-bottom: 30px; }
+        .hero-checklist { list-style: none; margin-bottom: 35px; }
+        .hero-checklist li { margin-bottom: 12px; display: flex; gap: 12px; font-size: 15px; }
+        .hero-checklist li span { color: #ff4d6d; font-weight: bold; font-size: 18px; }
+        .explore-btn { display: inline-block; background-color: #1abc9c; color: #fff; padding: 15px 35px; border-radius: 4px; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .explore-btn:hover { background-color: #e31e24; }
+
+        .hero-right { width: 50%; }
+        .student-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px 15px; }
+        .student-card { position: relative; display: flex; flex-direction: column; align-items: center; }
+        .photo-circle { width: 85px; height: 85px; background: #f4c430; border-radius: 50%; border: 3px solid #1f2a7c; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; }
+        .photo-circle img { width: 90%; height: 90%; object-fit: cover; filter: grayscale(100%); }
+        .badge-lpa { position: absolute; top: -10px; left: 0; background: #fff; color: #000; font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 2; }
+        .badge-company { margin-top: -12px; z-index: 2; background: #e31e24; color: #fff; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+
+        /* =========================================
+           4. STATS BOX (Desktop Floating)
+           ========================================= */
+        .stats-box {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 40px 0;
+            position: absolute;
+            bottom: -230px; 
+            left: 20px; right: 20px;
+            display: flex; justify-content: space-around; align-items: center; text-align: center;
+            z-index: 20;
+        }
+        .stat-item h3 { font-size: 36px; color: #ff4d6d; margin-bottom: 5px; font-weight: 700; }
+        .stat-item p { font-size: 16px; color: #000; font-weight: 600; }
+
+        /* =========================================
+           5. RATINGS SECTION
+           ========================================= */
+        .ratings-section { background-color: #fff; padding-top: 100px; padding-bottom: 80px; }
+        .ratings-row { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .rating-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 20px 30px; display: flex; align-items: center; gap: 15px; min-width: 280px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .rating-card img { height: 42px; width: 42px; object-fit: contain; }
+        .platform { display: block; font-size: 14px; color: #666; margin-bottom: 2px; }
+        .score { display: block; font-size: 16px; color: #000; font-weight: 700; }
+
+        /* =========================================
+           6. OTHER SECTIONS
+           ========================================= */
+        .cert-section { padding:60px 80px; background-image: linear-gradient(#eaeaea 1px, transparent 1px), linear-gradient(90deg, #eaeaea 1px, transparent 1px); background-size:30px 30px; font-family: Arial, Helvetica, sans-serif; }
+        .section-title { text-align:center; margin-bottom:50px; }
+        .section-title h2 { font-size:42px; font-weight:700; }
+        .section-title h2 span { color:#1abc9c; }
+        .card-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:30px; }
+        .card { background:#fff; border:2px solid #444; border-radius:6px; padding:22px; }
+        .card h3 { font-size:22px; margin-bottom:12px; }
+        .card h3 span { color:#1abc9c; }
+        .card p { font-size:15px; line-height:1.6; margin-bottom:12px; }
+        .location span { color:#e63946; font-weight:600; }
+
+        .companies-section { padding:70px 80px; background:#fff; font-family: Arial, Helvetica, sans-serif; }
+        .companies-title { text-align:center; margin-bottom:50px; }
+        .companies-title h2 { font-size:38px; font-weight:600; }
+        .companies-title h2 span { color:#1abc9c; font-style:italic; }
+        .companies-grid { display:grid; grid-template-columns: repeat(6, 1fr); gap:25px; max-width:1200px; margin:auto; }
+        .company-box { border:2px solid #222; border-radius:6px; height:90px; display:flex; align-items:center; justify-content:center; background:#fff; }
+        .company-box img { max-width:120px; max-height:50px; object-fit:contain; }
+
+        .team-section { background:#fff; padding:80px 90px; font-family: Arial, Helvetica, sans-serif; }
+        .team-container { display:flex; align-items:flex-start; gap:80px; }
+        .team-left { flex:1; }
+        .team-tag { font-size:14px; letter-spacing:2px; color:#888; font-weight:600; }
+        .team-title { font-size:42px; font-family: 'Comic Sans MS', cursive; line-height:1.3; margin:15px 0; }
+        .team-title span { color:#ff5a6e; }
+        .team-curve { margin:10px 0 25px; }
+        .team-points { list-style:none; padding:0; }
+        .team-points li { font-size:18px; margin-bottom:15px; padding-left:35px; position:relative; }
+        .team-points li::before { content:"✔"; color:#ff5a6e; font-size:18px; position:absolute; left:0; top:0; }
+        .team-right { flex:1; position:relative; }
+        .team-images { display:flex; gap:60px; align-items:center; }
+        .team-card { text-align:center; }
+        .team-card img { width:260px; height:360px; object-fit:cover; border-radius:120px; }
+        .team-card p { margin-top:12px; font-family: 'Comic Sans MS', cursive; font-size:20px; }
+        .decor-shape { position:absolute; width:120px; height:80px; background:#f6a04d; border-radius:40px; top:40px; left:-40px; opacity:0.8; }
+        .decor-dots { position:absolute; right:-30px; top:60px; width:80px; height:120px; background: radial-gradient(#ff5a6e 2px, transparent 2px); background-size:12px 12px; }
+
+        .campus-section { width: 100%; padding: 60px 0; background: #fff; font-family: Arial, Helvetica, sans-serif; }
+        .campus-title { text-align: center; font-size: 42px; font-weight: 500; margin-bottom: 50px; }
+        .campus-title span { color: #18b7a4; font-family: cursive; position: relative; }
+        .campus-title span::after { content: ""; width: 80px; height: 4px; background: #18b7a4; display: block; margin: 8px auto 0; border-radius: 10px; }
+        .campus-wrapper { display: flex; justify-content: center; gap: 30px; max-width: 1200px; margin: auto; }
+        /* FIXED: Changed width to max-width to allow shrinking on mobile */
+        .campus-card { max-width: 520px; width: 100%; border: 2px solid #777; border-radius: 8px; padding: 25px 30px; background: #fff; }
+        .call { font-size: 16px; margin-bottom: 15px; }
+        .campus-card h3 { font-size: 26px; margin-bottom: 15px; font-weight: 700; }
+        .campus-card h3 span { color: #18b7a4; }
+        .address { font-size: 17px; line-height: 1.6; color: #333; margin-bottom: 25px; }
+        .visit { font-size: 18px; font-weight: 600; text-decoration: none; }
+        .visit.vijayawada { color: #e91e63; }
+        .visit.hyderabad { color: #e91e63; }
+
+        .video-section { text-align: center; padding: 60px 0; background: #fff; font-family: Arial, Helvetica, sans-serif; }
+        .video-title { font-size: 42px; font-weight: 500; margin-bottom: 10px; }
+        .video-title span { color: #18b7a4; font-family: cursive; position: relative; }
+        .video-title span::after { content: ""; width: 90px; height: 4px; background: #18b7a4; display: block; margin: 8px auto; border-radius: 10px; }
+        .more-link { display: inline-block; margin: 25px 0 50px; font-size: 20px; color: #e91e63; }
+        .slider-container { width: 1100px; margin: auto; overflow: hidden; }
+        .slider-track { display: flex; gap: 25px; transition: transform 0.5s ease; }
+        .slider-track img { width: 350px; height: 200px; border-radius: 6px; object-fit: cover; }
+        .dots { margin-top: 25px; }
+        .dot { height: 10px; width: 10px; background: #cceee8; border-radius: 50%; display: inline-block; margin: 0 6px; cursor: pointer; }
+        .dot.active { background: #18b7a4; }
+
+        .course-help-section { background-color: #0f4f46; margin: 60px auto; padding: 60px 80px; max-width: 1200px; border-radius: 8px; }
+        .course-help-content h2 { color: #ffffff; font-size: 36px; font-weight: 700; margin-bottom: 16px; }
+        .course-help-content p { color: #e6f2ef; font-size: 16px; line-height: 1.6; max-width: 700px; margin-bottom: 32px; }
+        .call-btn { display: inline-flex; align-items: center; gap: 10px; background-color: #1fc7a6; color: #ffffff; text-decoration: none; padding: 14px 28px; font-size: 16px; font-weight: 600; border-radius: 6px; transition: background-color 0.3s ease; }
+        .call-btn:hover { background-color: #18b093; }
+
+        .footer { background: linear-gradient(90deg, #05003b, #070057); padding: 80px 100px; color: #ffffff; font-family: Arial, sans-serif; }
+        .footer-container { display: flex; justify-content: space-between; gap: 80px; }
+        .footer-left { max-width: 420px; }
+        .logo { display: flex; align-items: center; gap: 1px; margin-bottom: 20px; }
+        .logo-text { font-size: 12px; font-weight: 100; }
+        .footer-desc { font-size: 15px; line-height: 1.8; margin-bottom: 30px; }
+        .social-icons { display: flex; gap: 18px; font-size: 18px; }
+        .footer-links h3 { color: #ffff00; font-size: 18px; margin-bottom: 20px; letter-spacing: 0.5px; }
+        .footer-links ul { list-style: none; padding: 0; margin: 0; }
+        .footer-links ul li { font-size: 16px; margin-bottom: 14px; cursor: pointer; }
+        .footer-links.wide { min-width: 260px; }
+
+        /* ========================================================
+           7. MOBILE RESPONSIVENESS (MEDIA QUERIES)
+           ======================================================== */
+        
+        /* TABLET VIEW */
+        @media (max-width: 1024px) {
+            .container { padding: 0 30px; }
+            .cert-section, .companies-section, .team-section, .footer { padding: 50px 30px; }
+            
+            .hero-wrapper { flex-direction: column; text-align: center; }
+            .hero-left, .hero-right { width: 100%; }
+            .hero-checklist li { justify-content: center; }
+            .student-grid { grid-template-columns: repeat(4, 1fr); margin-top: 30px; }
+            
+            .stats-box { width: 95%; left: 2.5%; right: 2.5%; }
+            
+            .card-grid { grid-template-columns: repeat(2, 1fr); }
+            .companies-grid { grid-template-columns: repeat(4, 1fr); }
+            
+            .team-container { flex-direction: column; text-align: center; }
+            .team-images { justify-content: center; margin-top: 30px; }
+            
+            .footer-container { gap: 30px; flex-wrap: wrap; }
+        }
+
+        /* MOBILE VIEW (480px) - "Down by Down" */
+        @media (max-width: 768px) {
+            
+            /* GLOBAL: Prevent Side Scroll & White Space */
+            body, html { width: 100%; overflow-x: hidden; }
+            .container { padding: 0 15px; width: 100%; }
+
+            /* 1. NAVBAR - Stacked */
+            .navbar { height: auto; padding: 15px 0; }
+            .navbar-container { flex-direction: column; gap: 15px; }
+            .menu { flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+            .menu li { height: auto; font-size: 13px; padding: 5px 0; }
+            .dropdown { display: none; } 
+
+            /* 2. HERO SECTION */
+            .hero-section { padding-bottom: 60px; margin-bottom: 0; padding-top: 40px; }
+            .script-title, .script-subtitle { font-size: 32px; }
+            .hero-wrapper { gap: 30px; }
+            .student-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } 
+
+            /* 3. STATS BOX - Stacked Vertical */
+            .stats-box {
+                position: static; /* No float */
+                flex-direction: column;
+                gap: 20px;
+                width: 100%;
+                margin: 20px 0 0 0;
+                padding: 20px;
+                box-shadow: none; border: 1px solid #eee;
+            }
+            .stat-item h3 { font-size: 28px; }
+
+            /* 4. RATINGS */
+            .ratings-section { padding-top: 20px; padding-bottom: 40px; }
+            .ratings-row { flex-direction: column; width: 100%; gap: 15px; }
+            .rating-card { width: 100%; min-width: auto; }
+
+            /* 5. CERTIFICATIONS & COMPANIES - Down by Down */
+            .cert-section { padding: 40px 15px; }
+            .card-grid { grid-template-columns: 1fr; gap: 20px; } /* 1 Column */
+            .companies-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } /* 2 logos per row */
+            .company-box { height: 70px; } .company-box img { max-width: 80px; }
+
+            /* 6. TEAM - Down by Down */
+            .team-section { padding: 40px 15px; }
+            .team-container { flex-direction: column; }
+            .team-images { flex-direction: column; width: 100%; gap: 20px; }
+            .team-card { width: 100%; }
+            .team-card img { width: 100%; height: auto; border-radius: 10px; }
+
+            /* 7. CAMPUS - Down by Down */
+            .campus-section { padding: 40px 15px; }
+            .campus-wrapper { flex-direction: column; gap: 20px; width: 100%; }
+            .campus-card { width: 10 0%; max-width: 100%; padding: 20px; } /* Fixed width issue */
+
+            /* 8. VIDEO SLIDER */
+            .video-section { padding: 40px 15px; }
+            .slider-container { width: 100%; }
+            .slider-track { flex-direction: column; width: 100%; }
+            .slider-track img { width: 100%; height: auto; margin-bottom: 15px; }
+
+            /* 9. HELP SECTION */
+            .course-help-section { padding: 30px 20px; margin: 40px 15px; }
+            .course-help-content h2 { font-size: 22px; }
+
+            /* 10. FOOTER - Down by Down */
+            .footer { padding: 40px 15px; }
+            .footer-container { flex-direction: column; text-align: center; gap: 30px; }
+            .footer-left, .footer-links { width: 100%; min-width: auto; }
+            .logo, .social-icons { justify-content: center; }
+        }
+    </style>
+</head>
+
+<body>
+        <header class="navbar">
+        <div class="container navbar-container">
+            
+            <div class="logo-box">
+                <img src="https://codegnan.com/wp-content/uploads/2023/05/Codegnan-Logo-Footer-logo.webp" alt="Codegnan">
+            </div>
+
+            <ul class="menu">
+                <li class="has-dropdown">
+                    Courses <span class="arrow">▼</span>
+                    <ul class="dropdown">
+                        <li class="has-submenu">
+                            Java Full Stack <span class="side-arrow">▶</span>
+                            <ul class="submenu">
+                                <li>Core Java</li>
+                                <li>Advanced Java</li>
+                                <li>Spring Boot</li>
+                            </ul>
+                        </li>
+                        <li>Python Data Science</li>
+                        <li>Web Development</li>
+                    </ul>
+                </li>
+                <li class="has-dropdown">Resources <span class="arrow">▼</span></li>
+                <li>Placements</li>
+                <li class="has-dropdown">About <span class="arrow">▼</span></li>
+                <li class="has-dropdown">Campuses <span class="arrow">▼</span></li>
+                <li>Contact</li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container relative-container">
+            
+            <div class="hero-wrapper">
+                
+                <div class="hero-left">
+                    <h1 class="script-title">India’s Most Trusted</h1>
+                    <h2 class="script-subtitle">EdTech Institute</h2>
+                    
+                    <p class="hero-desc">
+                        Codegnan offers <strong>finishing schools</strong> for students who want to start and grow their tech career. 
+                        Become job-ready with our expert trainer led online and classroom IT certification courses.
+                    </p>
+
+                    <ul class="hero-checklist">
+                        <li><span>✔</span> Expert trainers from top universities</li>
+                        <li><span>✔</span> Trained 30,000+ students</li>
+                        <li><span>✔</span> 1250+ companies have hired codegnan learners</li>
+                        <li><span>✔</span> Most advanced course curriculum</li>
+                        <li><span>✔</span> Practical learning with live projects</li>
+                        <li><span>✔</span> Rated 4.8/5 by more than 2,200 students</li>
+                    </ul>
+
+                    <a href="#" class="explore-btn">Explore Program &rarr;</a>
+                </div>
+
+                <div class="hero-right">
+                    <div class="student-grid">
+                        <div class="student-card"><span class="badge-lpa">13.9 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">Akamai</span></div>
+                        <div class="student-card"><span class="badge-lpa">9.5 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">INFOSYS</span></div>
+                        <div class="student-card"><span class="badge-lpa">7 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">TCS</span></div>
+                        <div class="student-card"><span class="badge-lpa">6.8 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">BERKSHIRE</span></div>
+                        <div class="student-card"><span class="badge-lpa">6 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">REDBUS</span></div>
+                        <div class="student-card"><span class="badge-lpa">6 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">ACCOLITE</span></div>
+                        <div class="student-card"><span class="badge-lpa">5 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">HEALTHASYST</span></div>
+                        <div class="student-card"><span class="badge-lpa">4.5 LPA</span><div class="photo-circle"><img src="https://via.placeholder.com/100"></div><span class="badge-company">BI WORLDWIDE</span></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="stats-box">
+                <div class="stat-item">
+                    <h3>3,982+</h3>
+                    <p>Students Placed</p>
+                </div>
+                <div class="stat-item">
+                    <h3>1600+</h3>
+                    <p>Drives Happened</p>
+                </div>
+                <div class="stat-item">
+                    <h3>27 LPA</h3>
+                    <p>Highest Package</p>
+                </div>
+                <div class="stat-item">
+                    <h3>4 LPA</h3>
+                    <p>Average Package</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="ratings-section">
+        <div class="container">
+            <div class="ratings-row">
+                
+                <div class="rating-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+                    <div class="rating-text">
+                        <span class="platform">Google My Business</span>
+                        <strong class="score">Rated 4.8/5</strong>
+                    </div>
+                </div>
+
+                <div class="rating-card">
+                    <img src="https://cdn.trustpilot.net/brand-assets/1.1.0/star-symbol.svg" alt="Trustpilot">
+                    <div class="rating-text">
+                        <span class="platform">Trustpilot</span>
+                        <strong class="score">Rated 4.8/5</strong>
+                    </div>
+                </div>
+
+                <div class="rating-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Justdial_Logo.jpg" alt="Justdial">
+                    <div class="rating-text">
+                        <span class="platform">Justdial</span>
+                        <strong class="score">Rated 4.7/5</strong>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="cert-section">
+        <div class="section-title">
+            <span class="star">⭐</span>
+            <h2>Our certification <span>programs</span></h2>
+            <svg width="140" height="20" viewBox="0 0 140 20">
+                <path d="M10 10 Q70 25 130 10" stroke="#1abc9c" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <p class="duration">📅 Duration: 1 Month</p>
+                <h3>Python <span>training</span></h3>
+                <p>Launch your data science or web development career with Python, the versatile programming language.</p>
+                <p class="location"><b>Python courses available in:</b><br><span>Hyderabad, Vijayawada</span></p>
+            </div>
+            <div class="card">
+                <p class="duration">📅 Duration: 6 Months</p>
+                <h3>Data science <span>training</span></h3>
+                <p>Advance your analytics career by gaining data science skills to extract strategic insights.</p>
+                <p class="location"><b>Data science courses available in:</b><br><span>Hyderabad, Vijayawada</span></p>
+            </div>
+            <div class="card">
+                <p class="duration">📅 Duration: 100 Days</p>
+                <h3>Full-stack Python <span>course</span></h3>
+                <p>Become a full-stack Python developer and kickstart your web and app development career.</p>
+                <p class="location"><b>Full-stack Python courses available in:</b><br><span>Hyderabad, Vijayawada</span></p>
+            </div>
+            <div class="card">
+                <p class="duration">📅 Duration: 1 Month</p>
+                <h3>Java <span>training</span></h3>
+                <p>Strengthen your backend development career by mastering object-oriented Java.</p>
+                <p class="location"><b>Java training classes available in:</b><br><span>Hyderabad, Vijayawada</span></p>
+            </div>
+            <div class="card">
+                <p class="duration">📅 Duration: 6 Months</p>
+                <h3>Machine Learning <span>training</span></h3>
+                <p>Advance your career in AI by mastering machine learning models and algorithms.</p>
+                <p class="location"><b>Machine learning classes available in:</b><br><span>Hyderabad, Vijayawada</span></p>
+            </div>
+            <div class="card">
+                <p class="duration">📅 Duration: 100 Days</p>
+                <h3>Full-stack Java <span>course</span></h3>
+                <p>Launch your career as a full-stack developer by gaining in-demand Java skills.</p>
+                <p class="location"><b>Full-stack Java courses available in:</b><br><span>Hyderabad, Vijayawada</span></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="companies-section">
+        <div class="companies-title">
+            <h2>Companies where <span>Our students got placed</span></h2>
+            <svg width="160" height="20" viewBox="0 0 160 20">
+                <path d="M10 10 Q80 30 150 10" stroke="#1abc9c" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="companies-grid">
+            <div class="company-box"><img src="images/tcs.png" alt="TCS"></div>
+            <div class="company-box"><img src="images/google.png" alt="Google"></div>
+            <div class="company-box"><img src="images/amazon.png" alt="Amazon"></div>
+            <div class="company-box"><img src="images/microsoft.png" alt="Microsoft"></div>
+            <div class="company-box"><img src="images/iitb.png" alt="IIT Bombay"></div>
+            <div class="company-box"><img src="images/stanford.png" alt="Stanford"></div>
+            <div class="company-box"><img src="images/nielsen.png" alt="Nielsen"></div>
+            <div class="company-box"><img src="images/capgemini.png" alt="Capgemini"></div>
+            <div class="company-box"><img src="images/pwc.png" alt="PWC"></div>
+            <div class="company-box"><img src="images/mphasis.png" alt="Mphasis"></div>
+            <div class="company-box"><img src="images/gensuite.png" alt="Gensuite"></div>
+            <div class="company-box"><img src="images/ruminds.png" alt="Ruminds"></div>
+            <div class="company-box"><img src="images/accenture.png" alt="Accenture"></div>
+            <div class="company-box"><img src="images/arabella.png" alt="Arabella"></div>
+            <div class="company-box"><img src="images/temenos.png" alt="Temenos"></div>
+            <div class="company-box"><img src="images/techmahindra.png" alt="Tech Mahindra"></div>
+            <div class="company-box"><img src="images/ezetap.png" alt="Ezetap"></div>
+            <div class="company-box"><img src="images/cognizant.png" alt="Cognizant"></div>
+            <div class="company-box"><img src="images/slb.png" alt="SLB"></div>
+            <div class="company-box"><img src="images/ey.png" alt="EY"></div>
+            <div class="company-box"><img src="images/voya.png" alt="Voya"></div>
+            <div class="company-box"><img src="images/teksan.png" alt="Teksan"></div>
+            <div class="company-box"><img src="images/hcl.png" alt="HCL"></div>
+            <div class="company-box"><img src="images/bofa.png" alt="Bank of America"></div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="team-container">
+            <div class="team-left">
+                <p class="team-tag">OUR TEAM</p>
+                <h2 class="team-title">Our Top Notch Teams<br>Involved In Helping <span>You Learn Programming</span>,<br>Not Just Coding.</h2>
+                <svg class="team-curve" width="120" height="20" viewBox="0 0 120 20">
+                    <path d="M5 10 Q60 25 115 10" stroke="#1abc9c" stroke-width="4" fill="none" stroke-linecap="round"/>
+                </svg>
+                <ul class="team-points">
+                    <li>Embark on a Journey with Elite Mentors – IIT Alumni and Top MNC Experts.</li>
+                    <li>Experience Doubt-Free Learning from Product Developers.</li>
+                    <li>Elevate Your Skills with Expert Masterclasses.</li>
+                </ul>
+            </div>
+            <div class="team-right">
+                <div class="decor-shape"></div>
+                <div class="decor-dots"></div>
+                <div class="team-images">
+                    <div class="team-card">
+                        <img src="images/sairam.jpg" alt="Mr. Sairam">
+                        <p>Mr. Sairam</p>
+                    </div>
+                    <div class="team-card">
+                        <img src="images/saketh.jpg" alt="Mr. Saketh">
+                        <p>Mr. Saketh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="campus-section">
+        <h2 class="campus-title">Our training <span>campuses</span></h2>
+        <div class="campus-wrapper">
+            <div class="campus-card">
+                <p class="call">📞 Call: <strong>+91 9642988688</strong></p>
+                <h3>Vijayawada training <span>centre</span></h3>
+                <p class="address">40-5-19/16, Prasad Naidu Complex, P.B.Siddhartha Busstop, Moghalrajpuram, Vijayawada, Andhra Pradesh, 520010.</p>
+                <a href="#" class="visit vijayawada">Visit our Vijayawada campus</a>
+            </div>
+            <div class="campus-card">
+                <p class="call">📞 Call: <strong>+91 9642988788</strong></p>
+                <h3>Hyderabad training <span>centre</span></h3>
+                <p class="address">Kothwal Madhava Reddy Plaza, Near JNTUH Metro Station, Nizampet X Roads, Hyderabad, 500072</p>
+                <a href="#" class="visit hyderabad">Visit our Hyderabad campus</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-section">
+        <h2 class="video-title"><span>Video Testimonials</span> of Our Students</h2>
+        <a href="#" class="more-link">Click here to view more Testimonials</a>
+        <div class="slider-container">
+            <div class="slider-track">
+                <img src="video1.jpg" alt="video1">
+                <img src="video2.jpg" alt="video2">
+                <img src="video3.jpg" alt="video3">
+                <img src="video4.jpg" alt="video4">
+                <img src="video5.jpg" alt="video5">
+            </div>
+        </div>
+        <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </section>
+
+    <section class="course-help-section">
+        <div class="course-help-content">
+            <h2>Still have questions regarding courses?</h2>
+            <p>Talk to our team and get support in identifying the right tech career course for you. Our team will answer your questions regarding courses, fees, batch details, and all.</p>
+            <a href="tel:+910000000000" class="call-btn">📞 Call us</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            
+            <div class="footer-left">
+                
+                <div class="logo">
+                    <img src="https://codegnan.com/wp-content/uploads/2023/05/Codegnan-Logo-Footer-logo.webp" alt="Codegnan Logo" style="height: 50px;">
+                </div>
+
+                <p class="footer-desc">
+                    With over two decades, we are bringing international teaching standards to the tech aspirants globally. 
+                    Nurture your inner coder with us and take charge of your coding career with the top trending and high-paying technologies. 
+                    This is the right time to enlighten your code “GNAN”.
+                </p>
+
+                <div class="social-icons">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                    <i class="fa-brands fa-youtube"></i>
+                    <i class="fa-brands fa-facebook-f"></i>
+                    <i class="fa-brands fa-x-twitter"></i>
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <i class="fa-brands fa-telegram"></i>
+                </div>
+            </div>
+
+            <div class="footer-links wide">
+                <h3>COMPANY</h3>
+                <ul>
+                    <li>Blogs</li>
+                    <li>About us</li>
+                    <li>Internships</li>
+                    <li>Placements</li>
+                    <li>Job acceleration program</li>
+                    <li>Terms and Conditions</li>
+                    <li>Refund and Cancellation</li>
+                </ul>
+            </div>
+
+            <div class="footer-links wide">
+                <h3>OUR COURSES</h3>
+                <ul>
+                    <li>Python</li>
+                    <li>Java</li>
+                    <li>Data Science</li>
+                    <li>Machine Learning</li>
+                    <li>React Js</li>
+                    <li>Data structures</li>
+                    <li>C Programming</li>
+                    <li>Software Testing</li>
+                </ul>
+            </div>
+            
+        </div>
+    </footer>
+
+</body>
+     
+
+</body>
+
+</html>--
